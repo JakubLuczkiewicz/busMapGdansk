@@ -1,0 +1,191 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>OpenLayers Map</title>
+
+        <!-- The openlayers script -->
+        <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+        <script type="text/javascript">
+            var lon = 18.64542;
+            var lat = 54.34766;
+            var zoom = 10;
+            var map;
+            var mercator = new OpenLayers.Projection("EPSG:900913");
+            var wgs84 = new OpenLayers.Projection("EPSG:4326"); 
+            var apiKey = "ApTJzdkyN1DdFKkRAE6QIDtzihNaf6IWJsT-nQ_2eMoO4PN__0Tzhl2-WgJtXFSp";
+            var options = { projection: mercator, displayProjection: wgs84 };
+
+
+            function init(){
+                map = new OpenLayers.Map('map', options);
+                
+                var osm = new OpenLayers.Layer.OSM("Simple OSM Map");
+				
+				var bing_road = new OpenLayers.Layer.Bing({
+					name: "Road Bing Map",
+					key: apiKey,
+					type: "Road"});
+
+				var bing_sat = new OpenLayers.Layer.Bing({
+					name: "Aerial Bing Map",
+					key: apiKey,
+					type: "Aerial"});
+					
+				var bing_phys = new OpenLayers.Layer.Bing({
+					name: "Hybrid Bing Map",
+					key: apiKey,
+					type: "AerialWithLabels"});
+					
+				var wms = new OpenLayers.Layer.WMS(
+					"WMS",
+					"http://ksg.eti.pg.gda.pl/geoserver/gis/wms",
+					{layers:'2014_07_25_Baltic_Cyano', transparent: true},
+					{isBaseLayer: false});
+
+				//var vectors = new OpenLayers.Layer.Vector("Warstwa wektorowa");
+
+				var markers = new OpenLayers.Layer.Markers("Markery");
+
+                map.addLayers([osm, bing_road, bing_sat, markers]);
+				//map.addLayers([wms, bing_phys, vectors]);
+				//wms.setOpacity(0.5);
+
+				var mrk1 = new OpenLayers.Marker(new OpenLayers.LonLat(18.61321, 54.33713).transform(wgs84, mercator));
+				var mrk2 = new OpenLayers.Marker(new OpenLayers.LonLat(18.61612, 54.33942).transform(wgs84, mercator));
+				var mrk3 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58526, 54.32711).transform(wgs84, mercator));
+				var mrk4 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60330, 54.38937).transform(wgs84, mercator));
+				var mrk5 = new OpenLayers.Marker(new OpenLayers.LonLat(18.61449, 54.39168).transform(wgs84, mercator));
+				var mrk6 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60712, 54.39719).transform(wgs84, mercator));
+				var mrk7 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57090, 54.38793).transform(wgs84, mercator));
+				var mrk8 = new OpenLayers.Marker(new OpenLayers.LonLat(18.56810, 54.39803).transform(wgs84, mercator));
+				var mrk9 = new OpenLayers.Marker(new OpenLayers.LonLat(18.48032, 54.41780).transform(wgs84, mercator));
+				var mrk10 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58610, 54.33911).transform(wgs84, mercator));
+				var mrk11 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59630, 54.40997).transform(wgs84, mercator));
+				var mrk12 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59630, 54.40997).transform(wgs84, mercator));
+				var mrk13 = new OpenLayers.Marker(new OpenLayers.LonLat(18.55878, 54.35199).transform(wgs84, mercator));
+				var mrk14 = new OpenLayers.Marker(new OpenLayers.LonLat(18.61822, 54.32621).transform(wgs84, mercator));
+				var mrk15 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59011, 54.40161).transform(wgs84, mercator));
+				var mrk16 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58905, 54.41111).transform(wgs84, mercator));
+				var mrk17 = new OpenLayers.Marker(new OpenLayers.LonLat(18.55222, 54.34828).transform(wgs84, mercator));
+				var mrk18 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58062, 54.31784).transform(wgs84, mercator));
+				var mrk19 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59197, 54.34395).transform(wgs84, mercator));
+				var mrk20 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58671, 54.32078).transform(wgs84, mercator));
+				var mrk21 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57693, 54.31964).transform(wgs84, mercator));
+				var mrk22 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59303, 54.30903).transform(wgs84, mercator));
+				var mrk23 = new OpenLayers.Marker(new OpenLayers.LonLat(18.63227, 54.40720).transform(wgs84, mercator));
+				var mrk24 = new OpenLayers.Marker(new OpenLayers.LonLat(18.56231, 54.34248).transform(wgs84, mercator));
+				var mrk25 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59850, 54.40358).transform(wgs84, mercator));
+				var mrk26 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59488, 54.40155).transform(wgs84, mercator));
+				var mrk27 = new OpenLayers.Marker(new OpenLayers.LonLat(18.56339, 54.37579).transform(wgs84, mercator));
+				var mrk28 = new OpenLayers.Marker(new OpenLayers.LonLat(18.56431, 54.37693).transform(wgs84, mercator));
+				var mrk29 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57940, 54.42147).transform(wgs84, mercator));
+				var mrk30 = new OpenLayers.Marker(new OpenLayers.LonLat(18.65373, 54.35535).transform(wgs84, mercator));
+				var mrk31 = new OpenLayers.Marker(new OpenLayers.LonLat(18.64122, 54.34224).transform(wgs84, mercator));
+				var mrk32 = new OpenLayers.Marker(new OpenLayers.LonLat(18.62440, 54.35212).transform(wgs84, mercator));
+				var mrk33 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60898, 54.35224).transform(wgs84, mercator));
+				var mrk34 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59957, 54.35314).transform(wgs84, mercator));
+				var mrk35 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60974, 54.35403).transform(wgs84, mercator));
+				var mrk36 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57693, 54.37934).transform(wgs84, mercator));
+				var mrk37 = new OpenLayers.Marker(new OpenLayers.LonLat(18.61481, 54.29977).transform(wgs84, mercator));
+				var mrk38 = new OpenLayers.Marker(new OpenLayers.LonLat(18.70700, 54.35869).transform(wgs84, mercator));
+				var mrk39 = new OpenLayers.Marker(new OpenLayers.LonLat(18.64767, 54.39115).transform(wgs84, mercator));
+				var mrk40 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57857, 54.32768).transform(wgs84, mercator));
+				var mrk41 = new OpenLayers.Marker(new OpenLayers.LonLat(18.66188, 54.34390).transform(wgs84, mercator));
+				var mrk42 = new OpenLayers.Marker(new OpenLayers.LonLat(18.66528, 54.34277).transform(wgs84, mercator));
+				var mrk43 = new OpenLayers.Marker(new OpenLayers.LonLat(18.63747, 54.32767).transform(wgs84, mercator));
+				var mrk44 = new OpenLayers.Marker(new OpenLayers.LonLat(18.64873, 54.39089).transform(wgs84, mercator));
+				var mrk45 = new OpenLayers.Marker(new OpenLayers.LonLat(18.62784, 54.40570).transform(wgs84, mercator));
+				var mrk46 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58134, 54.40107).transform(wgs84, mercator));
+				var mrk47 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58340, 54.40366).transform(wgs84, mercator));
+				var mrk48 = new OpenLayers.Marker(new OpenLayers.LonLat(18.71050, 54.36047).transform(wgs84, mercator));
+				var mrk49 = new OpenLayers.Marker(new OpenLayers.LonLat(18.66222, 54.34680).transform(wgs84, mercator));
+				var mrk50 = new OpenLayers.Marker(new OpenLayers.LonLat(18.68359, 54.35535).transform(wgs84, mercator));
+				var mrk51 = new OpenLayers.Marker(new OpenLayers.LonLat(18.68733, 54.35691).transform(wgs84, mercator));
+				var mrk52 = new OpenLayers.Marker(new OpenLayers.LonLat(18.56590, 54.42204).transform(wgs84, mercator));
+				var mrk53 = new OpenLayers.Marker(new OpenLayers.LonLat(18.62993, 54.35771).transform(wgs84, mercator));
+				var mrk54 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59316, 54.32626).transform(wgs84, mercator));
+				var mrk55 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59877, 54.32759).transform(wgs84, mercator));
+				var mrk56 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59369, 54.32981).transform(wgs84, mercator));
+				var mrk57 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59481, 54.32501).transform(wgs84, mercator));
+				var mrk58 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59570, 54.32763).transform(wgs84, mercator));
+				var mrk59 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58538, 54.41460).transform(wgs84, mercator));
+				var mrk60 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59256, 54.41509).transform(wgs84, mercator));
+				var mrk61 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57235, 54.35207).transform(wgs84, mercator));
+				var mrk62 = new OpenLayers.Marker(new OpenLayers.LonLat(18.62215, 54.38750).transform(wgs84, mercator));
+				var mrk63 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58974, 54.35745).transform(wgs84, mercator));
+				var mrk64 = new OpenLayers.Marker(new OpenLayers.LonLat(18.61071, 54.38018).transform(wgs84, mercator));
+				var mrk65 = new OpenLayers.Marker(new OpenLayers.LonLat(18.82787, 54.34398).transform(wgs84, mercator));
+				var mrk66 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57776, 54.41867).transform(wgs84, mercator));
+				var mrk67 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59652, 54.41333).transform(wgs84, mercator));
+				var mrk68 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58624, 54.35720).transform(wgs84, mercator));
+				var mrk69 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59657, 54.36362).transform(wgs84, mercator));
+				var mrk70 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60087, 54.40673).transform(wgs84, mercator));
+				var mrk71 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60079, 54.40961).transform(wgs84, mercator));
+				var mrk72 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59622, 54.40616).transform(wgs84, mercator));
+				var mrk73 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59278, 54.40821).transform(wgs84, mercator));
+				var mrk74 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60197, 54.40522).transform(wgs84, mercator));
+				var mrk75 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58694, 54.40762).transform(wgs84, mercator));
+				var mrk76 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59185, 54.40749).transform(wgs84, mercator));
+				var mrk77 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60024, 54.40789).transform(wgs84, mercator));
+				var mrk78 = new OpenLayers.Marker(new OpenLayers.LonLat(18.60535, 54.40933).transform(wgs84, mercator));
+				var mrk79 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58290, 54.42434).transform(wgs84, mercator));
+				var mrk80 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58316, 54.41911).transform(wgs84, mercator));
+				var mrk81 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57097, 54.38534).transform(wgs84, mercator));
+				var mrk82 = new OpenLayers.Marker(new OpenLayers.LonLat(18.56978, 54.38889).transform(wgs84, mercator));
+				var mrk83 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58291, 54.35368).transform(wgs84, mercator));
+				var mrk84 = new OpenLayers.Marker(new OpenLayers.LonLat(18.61080, 54.31399).transform(wgs84, mercator));
+				var mrk85 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59717, 54.33400).transform(wgs84, mercator));
+				var mrk86 = new OpenLayers.Marker(new OpenLayers.LonLat(18.63732, 54.34696).transform(wgs84, mercator));
+				var mrk87 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58653, 54.33670).transform(wgs84, mercator));
+				var mrk88 = new OpenLayers.Marker(new OpenLayers.LonLat(18.58023, 54.32636).transform(wgs84, mercator));
+				var mrk89 = new OpenLayers.Marker(new OpenLayers.LonLat(18.59069, 54.41245).transform(wgs84, mercator));
+				var mrk90 = new OpenLayers.Marker(new OpenLayers.LonLat(18.56753, 54.41761).transform(wgs84, mercator));
+				var mrk91 = new OpenLayers.Marker(new OpenLayers.LonLat(18.55689, 54.41569).transform(wgs84, mercator));
+				var mrk92 = new OpenLayers.Marker(new OpenLayers.LonLat(18.62282, 54.24348).transform(wgs84, mercator));
+				var mrk93 = new OpenLayers.Marker(new OpenLayers.LonLat(18.52998, 54.31709).transform(wgs84, mercator));
+				var mrk94 = new OpenLayers.Marker(new OpenLayers.LonLat(18.62948, 54.32905).transform(wgs84, mercator));
+				var mrk95 = new OpenLayers.Marker(new OpenLayers.LonLat(18.63116, 54.32436).transform(wgs84, mercator));
+				var mrk96 = new OpenLayers.Marker(new OpenLayers.LonLat(18.62961, 54.32688).transform(wgs84, mercator));
+				var mrk97 = new OpenLayers.Marker(new OpenLayers.LonLat(18.66148, 54.34749).transform(wgs84, mercator));
+				var mrk98 = new OpenLayers.Marker(new OpenLayers.LonLat(18.55852, 54.37982).transform(wgs84, mercator));
+				var mrk99 = new OpenLayers.Marker(new OpenLayers.LonLat(18.57455, 54.37884).transform(wgs84, mercator));
+				var mrk100 = new OpenLayers.Marker(new OpenLayers.LonLat(18.61140, 54.30400).transform(wgs84, mercator));
+				var mrk101 = new OpenLayers.Marker(new OpenLayers.LonLat(18.55893, 54.32391).transform(wgs84, mercator));
+				var mrk102 = new OpenLayers.Marker(new OpenLayers.LonLat(18.54206, 54.33479).transform(wgs84, mercator));
+				
+				var list = [mrk1, mrk2, mrk3, mrk4, mrk5, mrk6, mrk7, mrk8, mrk9, mrk10,
+							mrk11, mrk12, mrk13, mrk14, mrk15, mrk16, mrk17, mrk18, mrk19, mrk20,
+							mrk21, mrk22, mrk23, mrk24, mrk25, mrk26, mrk27, mrk28, mrk29, mrk30,
+							mrk31, mrk32, mrk33, mrk34, mrk35, mrk36, mrk37, mrk38, mrk39, mrk40,
+							mrk41, mrk42, mrk43, mrk44, mrk45, mrk46, mrk47, mrk48, mrk49, mrk50,
+							mrk51, mrk52, mrk53, mrk54, mrk55, mrk56, mrk57, mrk58, mrk59, mrk60,
+							mrk61, mrk62, mrk63, mrk64, mrk65, mrk66, mrk67, mrk68, mrk69, mrk70,
+							mrk71, mrk72, mrk73, mrk74, mrk75, mrk76, mrk77, mrk78, mrk79, mrk80,
+							mrk81, mrk82, mrk83, mrk84, mrk85, mrk86, mrk87, mrk88, mrk89, mrk90,
+							mrk91, mrk92, mrk93, mrk94, mrk95, mrk96, mrk97, mrk98, mrk99, mrk100,
+							mrk101, mrk102];
+
+				for (var i = 0; i < 102; i++) {
+					markers.addMarker(list[i]);
+				}
+
+				
+
+                map.zoomIn();
+				
+				map.setCenter(new OpenLayers.LonLat(lon, lat).transform(wgs84, mercator), zoom);
+				
+				map.addControl(new OpenLayers.Control.LayerSwitcher());
+				map.addControl(new OpenLayers.Control.PanZoomBar());
+				map.addControl(new OpenLayers.Control.ScaleLine());
+				map.addControl(new OpenLayers.Control.OverviewMap());
+				map.addControl(new OpenLayers.Control.KeyboardDefaults());
+				map.addControl(new OpenLayers.Control.MousePosition());
+				map.addControl(new OpenLayers.Control.EditingToolbar(vectors));
+            }
+
+        </script>
+    </head>
+    <body onload="init()">
+            <div id="map"></div>
+    </body>
+</html>
