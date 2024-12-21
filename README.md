@@ -15,5 +15,5 @@ Każdy punkt będzie reprezentowany za pomocą markera. Markery będą się wizu
 Markery będzie można filtrować w zależności od typu odpadów oraz odległości od wybranego na mapie punktu. Będzie można również wyszukać konkretny adres na mapie i znaleźć trasę od tego adresu do najbliższego punktu odbioru odpadów.
 
 
-4. Wykorzystywane technologie:
+3. Wykorzystywane technologie:
 - OpenLayers
