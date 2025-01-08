@@ -1,4 +1,4 @@
-Mapa pozycji pojazdów komunikacji miejskiej w Gdańsku
+## Mapa pozycji pojazdów komunikacji miejskiej w Gdańsku
 
 Z API pobierane są dane o lokalizacji każdego autobusu i tramwaju, a następnie na mapie umieszczany jest marker na danych koordynatach.
 Są trzy rodzaje markerów:
