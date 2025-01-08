@@ -65,7 +65,15 @@
           });
 
           // Styl markera
-          marker.getElement().style.backgroundColor = 'red';
+          if (place.routeId <= 12) {
+            marker.getElement().style.backgroundColor = 'blue';    // Niebieskie dla tramwajów
+          }
+          else if (place.routeId.toString().startsWith('N')) {
+            marker.getElement().style.backgroundColor = 'black';    // Czarne dla nocnych
+          }
+          else {
+            marker.getElement().style.backgroundColor = 'red';    // Czerwone dla pozostałych
+          }
           marker.getElement().style.width = '10px';
           marker.getElement().style.height = '10px';
           marker.getElement().style.borderRadius = '50%';
