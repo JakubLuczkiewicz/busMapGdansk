@@ -45,16 +45,24 @@
 
     // Licznik służy mi do sprawdzenie czy apka wyświetla wszystkie pojazdy z JSON'a
     let markerCount = 0;
+    let markers = [];
 
+    function updateBusLocations() {
     fetch('https://ckan2.multimediagdansk.pl/gpsPositions?v=2')
       .then(response => response.json())
       .then(data => {
-        const places = data.vehicles
 
-        places.forEach(function(place) {
+        // Usuń markery z tablicy i mapy
+        markers.forEach(marker => {
+          map.removeOverlay(marker);
+        });
+        markers = [];
+        markerCount = 0;
+
+        data.vehicles.forEach(function(vechicle) {
               
           // Dla każdego pojazdu wyciągnij lon i lat
-          const coordinate = ol.proj.fromLonLat([place.lon, place.lat]);
+          const coordinate = ol.proj.fromLonLat([vechicle.lon, vechicle.lat]);
 
           // Stwórz marker dla danych koordynatów
           const marker = new ol.Overlay({
@@ -65,26 +73,33 @@
           });
 
           // Styl markera
-          if (place.routeId <= 12) {
-            marker.getElement().style.backgroundColor = 'blue';    // Niebieskie dla tramwajów
+          if (vechicle.routeId <= 12) {
+            marker.getElement().style.backgroundColor = 'blue';
           }
-          else if (place.routeId.toString().startsWith('N')) {
-            marker.getElement().style.backgroundColor = 'black';    // Czarne dla nocnych
+          else if (vechicle.routeId.toString().startsWith('N')) {
+            marker.getElement().style.backgroundColor = 'black';
           }
           else {
-            marker.getElement().style.backgroundColor = 'red';    // Czerwone dla pozostałych
+            marker.getElement().style.backgroundColor = 'red';
           }
           marker.getElement().style.width = '10px';
           marker.getElement().style.height = '10px';
           marker.getElement().style.borderRadius = '50%';
 
           map.addOverlay(marker);
+          markers.push(marker);
 
           markerCount++;
           document.getElementById('counter').textContent = `Liczba markerów: ${markerCount}`;
         });
       })
       .catch(error => console.error('Error loading places:', error));
+    }
+
+    setInterval(updateBusLocations, 20000);   // Update co 20 sekund
+
+    updateBusLocations();
+
   </script>
 </body>
 </html>
