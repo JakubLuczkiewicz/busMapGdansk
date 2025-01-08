@@ -83,10 +83,10 @@
           });
 
           // Styl markera
-          if (vechicle.routeId <= 12) {
+          if (vechicle.routeShortName <= 12) {
             marker.getElement().style.backgroundColor = 'blue';    // Niebieski dla tramwajów
           }
-          else if (vechicle.routeId.toString().startsWith('N')) {
+          else if (vechicle.routeShortName.toString().startsWith('N')) {
             marker.getElement().style.backgroundColor = 'black';    // Czarny dla nocnych
           }
           else {
