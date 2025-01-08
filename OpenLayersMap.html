@@ -74,13 +74,13 @@
 
           // Styl markera
           if (vechicle.routeId <= 12) {
-            marker.getElement().style.backgroundColor = 'blue';
+            marker.getElement().style.backgroundColor = 'blue';    // Niebieskie dla tramwajó
           }
           else if (vechicle.routeId.toString().startsWith('N')) {
-            marker.getElement().style.backgroundColor = 'black';
+            marker.getElement().style.backgroundColor = 'black';    // Czarne dla nocnych
           }
           else {
-            marker.getElement().style.backgroundColor = 'red';
+            marker.getElement().style.backgroundColor = 'red';    // Czerwone dla reszty
           }
           marker.getElement().style.width = '10px';
           marker.getElement().style.height = '10px';
