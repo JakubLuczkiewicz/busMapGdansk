@@ -18,7 +18,7 @@ Mapa przedstawiająca lokalizację autobusów i tramwajów miejskich w czasie rz
 3. Wykorzystywane technologie:
 - OpenLayers
 - HTML
-- Python
+- JavaScript
 
 4. Plany na rozwój aplikacji
    W następnym semestrze możemy dodać przystanki do naszej aplikacji oraz nawigację do najbliższego przystanku.
