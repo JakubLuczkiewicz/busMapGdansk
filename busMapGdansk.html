@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa OpenLayers</title>
+  <link rel="stylesheet" href="https://unpkg.com/ol@v7.1.0/dist/ol.css" type="text/css">
+  <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+    #map {
+      width: 100%;
+      height: 85%;
+    }
+    #counter {
+        text-align: center;
+        font-size: 20px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        margin-top: 10px;
+    }
+    #infoPanel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        text-align: center;
+        display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="counter">Licznik pojazdów: 0</div>
+  <div id="infoPanel"></div>
+
+  <script src="https://unpkg.com/ol@v7.1.0/dist/ol.js"></script>
+  <script>
+    // Tworzymy mapę
+    const map = new ol.Map({
+      target: 'map',
+      layers: [
+        new ol.layer.Tile({
+          source: new ol.source.OSM(),
+        })
+      ],
+      view: new ol.View({
+        center: ol.proj.fromLonLat([18.6464, 54.3520]),
+        zoom: 12,
+      }),
+    });
+
+    // Licznik służy mi do sprawdzenie czy apka wyświetla wszystkie pojazdy z JSON'a
+    let markerCount = 0;
+    let markers = [];
+
+    function updateBusLocations() {
+    fetch('https://ckan2.multimediagdansk.pl/gpsPositions?v=2')
+      .then(response => response.json())
+      .then(data => {
+
+        // Usuń markery z tablicy i mapy
+        markers.forEach(marker => {
+          map.removeOverlay(marker);
+        });
+        markers = [];
+        markerCount = 0;
+
+        data.vehicles.forEach(function(vechicle) {
+              
+          // Dla każdego pojazdu wyciągnij lon i lat
+          const coordinate = ol.proj.fromLonLat([vechicle.lon, vechicle.lat]);
+
+          let iconSrc = '';
+          if (vechicle.routeShortName <= 12) {
+            iconSrc = 'tram.png';
+          } else {
+            iconSrc = 'bus.png';
+          }
+
+          const markerElement = document.createElement('img');
+          const lineNumberElement = document.createElement('div');
+
+          markerElement.src = iconSrc;
+          markerElement.style.width = '30px';
+          markerElement.style.height = '30px';
+
+          lineNumberElement.textContent = vechicle.routeShortName;
+          lineNumberElement.style.position = 'absolute';
+          lineNumberElement.style.top = '16px';
+          lineNumberElement.style.left = '0';
+          lineNumberElement.style.fontSize = '12px';
+          lineNumberElement.style.fontWeight = 'bold';
+          lineNumberElement.style.color = 'black';
+
+          const markerContainer = document.createElement('div');
+          markerContainer.style.position = 'relative';
+          markerContainer.appendChild(markerElement);
+          markerContainer.appendChild(lineNumberElement);
+
+          // Stwórz marker dla danych koordynatów
+          const marker = new ol.Overlay({
+            position: coordinate,
+            positioning: 'center-center',
+            element: markerContainer,
+            stopEvent: false
+          });
+
+          map.addOverlay(marker);
+          markers.push(marker);
+
+          if (vechicle.delay <= 0) {
+            markerContainer.addEventListener('click', () => {
+              document.getElementById('infoPanel').style.display = 'block';
+              document.getElementById('infoPanel').innerHTML = `
+              <p>Linia: ${vechicle.routeShortName} &emsp;
+              Kierunek: ${vechicle.headsign} &emsp;
+              Brak opóźnienia &emsp;
+              Prędkość: ${vechicle.speed} km/h</p>
+              `;
+            });
+          }
+          else if (vechicle.delay >= 60) {
+            markerContainer.addEventListener('click', () => {
+              document.getElementById('infoPanel').style.display = 'block';
+              document.getElementById('infoPanel').innerHTML = `
+              <p>Linia: ${vechicle.routeShortName} &emsp;
+              Kierunek: ${vechicle.headsign} &emsp;
+              Opóźnienie: ${Math.floor(vechicle.delay / 60)} min ${vechicle.delay % 60} s &emsp;
+              Prędkość: ${vechicle.speed} km/h</p>
+            `;
+            });
+          }
+          else {
+            markerContainer.addEventListener('click', () => {
+              document.getElementById('infoPanel').style.display = 'block';
+              document.getElementById('infoPanel').innerHTML = `
+              <p>Linia: ${vechicle.routeShortName} &emsp;
+              Kierunek: ${vechicle.headsign} &emsp;
+              Opóźnienie: ${vechicle.delay} s &emsp;
+              Prędkość: ${vechicle.speed} km/h</p>
+              `;
+            });
+          }
+
+          markerCount++;
+          document.getElementById('counter').textContent = `Liczba pojazdów: ${markerCount}`;
+        });
+      })
+      .catch(error => console.error('Error loading places:', error));
+    }
+
+    setInterval(updateBusLocations, 10000);   // Update co 20 sekund
+
+    updateBusLocations();
+
+  </script>
+</body>
+</html>
