@@ -1,138 +1,247 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mapa OpenLayers - Gdańsk</title>
-    <link rel="stylesheet" href="https://unpkg.com/ol@v7.1.0/dist/ol.css" type="text/css">
+    <!-- <link
+      rel="stylesheet"
+      href="https://unpkg.com/ol@v7.1.0/dist/ol.css"
+      type="text/css"
+    /> -->
     <script src="https://unpkg.com/ol@v7.1.0/dist/ol.js"></script>
+
     <style>
-        html, body {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-        }
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-        .ol-attribution {
-            position: absolute;
-            bottom: 0px;
-        }
-        .bus-marker {
-            background-color: red;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: block;
-            position: relative;
-            transform: translate(-50%, -50%);
-        }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+      .ol-control button {
+        margin: 5px;
+        width: 40px;
+        height: 30px;
+      }
+      .ol-attribution {
+        position: absolute;
+        bottom: 0px;
+      }
+      .bus-marker {
+        background-color: red;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: block;
+        position: relative;
+        transform: translate(-50%, -50%);
+      }
+      .ol-popup {
+        position: absolute;
+        background-color: white;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 25px;
+        left: -56px;
+        min-width: 200px;
+      }
+      .ol-popup:after,
+      .ol-popup:before {
+        top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      .ol-popup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+      }
+      .ol-popup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+      }
+      .ol-popup-closer {
+        text-decoration: none;
+        position: absolute;
+        top: 2px;
+        right: 8px;
+      }
+      .ol-popup-closer:after {
+        content: "✖";
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="map"></div>
+    <div id="popup" class="ol-popup">
+      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+      <div id="popup-content"></div>
+    </div>
 
     <script>
-        var map = new ol.Map({
-            target: 'map',
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM()
-                })
-            ],
-            view: new ol.View({
-                center: ol.proj.fromLonLat([18.6464, 54.3520]),
-                zoom: 12
-            })
+      var map = new ol.Map({
+        target: "map",
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM(),
+          }),
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([18.6464, 54.352]),
+          zoom: 12,
+        }),
+      });
+
+      function getMarkerStyle(feature) {
+        let lineNumber;
+        let routeShortName = 0;
+        try {
+          lineNumber = feature.values_.features[0].values_.data.routeId;
+          lineNumber = lineNumber.toString();
+          routeShortName =
+            feature.values_.features[0].values_.data.routeShortName;
+        } catch (error) {
+          lineNumber = "";
+        }
+        let isTram = routeShortName <= 12;
+        return new ol.style.Style({
+          image: new ol.style.Icon({
+            src: isTram ? "tram.png" : "bus.png",
+            scale: 0.02,
+          }),
+          text: new ol.style.Text({
+            text: lineNumber,
+            fill: new ol.style.Fill({ color: isTram ? "blue" : "black" }),
+            scale: 1.5,
+            offsetX: isTram ? -1 : -7,
+            offsetY: isTram ? 15 : 11,
+          }),
         });
+      }
 
+      function getClusterStyle(feature) {
+        const size = feature.get("features").length;
 
-        function getMarkerStyle() {
-            return new ol.style.Style({
-                image: new ol.style.Icon({
-                    src: "bus.png",
-                    scale: 0.02
-                })
+        if (size > 1) {
+          let colour;
+          try {
+            let clusterVehicles = feature.get("features");
+            console.log(clusterVehicles);
+            const isTramArray = [];
+            clusterVehicles.forEach((element) => {
+              let isTram = element.values_.data.routeShortName <= 12;
+              isTramArray.push(isTram);
             });
+            colour = isTramArray.every(Boolean)
+              ? "blue"
+              : isTramArray.some(Boolean)
+              ? "purple"
+              : "red";
+          } catch (error) {
+            colour = "red";
+          }
+
+          return new ol.style.Style({
+            image: new ol.style.Circle({
+              radius: 12,
+              fill: new ol.style.Fill({
+                color: colour,
+              }),
+            }),
+            text: new ol.style.Text({
+              text: size.toString(),
+              fill: new ol.style.Fill({ color: "#fff" }),
+              scale: 1.5,
+            }),
+          });
         }
-
-        function getClusterStyle(feature) {
-            const size = feature.get('features').length;
-
-            if (size > 1) {
-                return new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 12,
-                        fill: new ol.style.Fill({ color: 'red' })
-                    }),
-                    text: new ol.style.Text({
-                        text: size.toString(),
-                        fill: new ol.style.Fill({ color: '#fff' }),
-                        scale: 1.5
-                    })
-                });
-            }
-            return getMarkerStyle();
-        }
-
-        // const clusterStyle = function (feature) {
-        //     const size = feature.get('features').length;
-
-        //     if (size > 1) {
-        //         return new ol.style.Style({
-        //             image: new ol.style.Circle({
-        //                 radius: 12,
-        //                 fill: new ol.style.Fill({ color: 'red' })
-        //             }),
-        //             text: new ol.style.Text({
-        //                 text: size.toString(),
-        //                 fill: new ol.style.Fill({ color: '#fff' }),
-        //                 scale: 1.5
-        //             })
-        //         });
-        //     }
-        //     return getMarkerStyle();
-        // };
-
-        const vectorSource = new ol.source.Vector();
-        const clusterSource = new ol.source.Cluster({
-            distance: 20,
-            source: vectorSource
+        return getMarkerStyle(feature);
+      }
+      const container = document.getElementById("popup");
+      const content = document.getElementById("popup-content");
+      const closer = document.getElementById("popup-closer");
+      const overlay = new ol.Overlay({
+        element: container,
+        autoPan: {
+          animation: {
+            duration: 250,
+          },
+        },
+      });
+      closer.onclick = function () {
+        overlay.setPosition(0, 0);
+      };
+      map.addOverlay(overlay);
+      map.on("click", function (evt) {
+        var feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
+          return feature;
         });
-        const clusterLayer = new ol.layer.Vector({
-            source: clusterSource,
-            style: function (feature) {
-                return getClusterStyle(feature);
-            }
+        if (feature != undefined) {
+          let selectedFeature = feature.values_.features[0];
+          var coordinate = feature.getGeometry().getCoordinates();
+          let vechicle = feature.values_.features[0].values_.data;
+          content.innerHTML = `<p>Linia: ${vechicle.routeShortName} <br>
+              Kierunek: ${vechicle.headsign} <br>
+              Opóźnienie: ${
+                vechicle.delay <= 0 ? "brak" : vechicle.delay + "s"
+              } <br>
+              Prędkość: ${vechicle.speed} km/h</p>`;
+          overlay.setPosition(coordinate);
+        } else {
+          overlay.setPosition(0, 0);
+        }
+      });
+
+      const vectorSource = new ol.source.Vector();
+      const clusterSource = new ol.source.Cluster({
+        distance: 20,
+        source: vectorSource,
+      });
+      const clusterLayer = new ol.layer.Vector({
+        source: clusterSource,
+        style: function (feature) {
+          return getClusterStyle(feature);
+        },
+      });
+      function addBusMarkers(vehicles) {
+        vectorSource.clear();
+
+        vehicles.forEach(function (vehicle) {
+          var coordinates = ol.proj.fromLonLat([vehicle.lon, vehicle.lat]);
+          var marker = new ol.Feature({
+            geometry: new ol.geom.Point(coordinates),
+            name: vehicle.vehicleCode,
+          });
+          marker.set("data", vehicle);
+          vectorSource.addFeature(marker);
         });
+        map.addLayer(clusterLayer);
+      }
 
-        function addBusMarkers(vehicles) {
-            vectorSource.clear();
-            
-            vehicles.forEach(function(vehicle) {
-                var coordinates = ol.proj.fromLonLat([vehicle.lon, vehicle.lat]);
-                var marker = new ol.Feature({
-                    geometry: new ol.geom.Point(coordinates),
-                    name: vehicle.vehicleCode
-                });
-                vectorSource.addFeature(marker);
-            });
-            map.addLayer(clusterLayer);
-        }
-
-        function updateBusLocations() {
-            fetch('https://ckan2.multimediagdansk.pl/gpsPositions?v=2')
-            .then(response => response.json())
-            .then(data => {
-                addBusMarkers(data.vehicles);
-            });
-        }
-
+      function updateBusLocations() {
+        fetch("https://ckan2.multimediagdansk.pl/gpsPositions?v=2")
+          .then((response) => response.json())
+          .then((data) => {
+            addBusMarkers(data.vehicles);
+          });
+      }
+      try {
         setInterval(updateBusLocations, 10000);
         updateBusLocations();
-        
+      } catch (error) {}
     </script>
-</body>
+  </body>
 </html>
