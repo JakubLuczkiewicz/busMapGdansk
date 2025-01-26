@@ -17,6 +17,8 @@
         height: 100%;
         width: 100%;
         margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
       }
       #map {
         width: 100%;
@@ -105,6 +107,7 @@
         }),
       });
 
+      let selectedFeature = null;
       function getMarkerStyle(feature) {
         let lineNumber;
         let routeShortName = 0;
@@ -139,7 +142,6 @@
           let colour;
           try {
             let clusterVehicles = feature.get("features");
-            console.log(clusterVehicles);
             const isTramArray = [];
             clusterVehicles.forEach((element) => {
               let isTram = element.values_.data.routeShortName <= 12;
@@ -183,6 +185,7 @@
       });
       closer.onclick = function () {
         overlay.setPosition(0, 0);
+        selectedFeature = null;
       };
       map.addOverlay(overlay);
       map.on("click", function (evt) {
@@ -190,18 +193,24 @@
           return feature;
         });
         if (feature != undefined) {
-          let selectedFeature = feature.values_.features[0];
           var coordinate = feature.getGeometry().getCoordinates();
-          let vechicle = feature.values_.features[0].values_.data;
-          content.innerHTML = `<p>Linia: ${vechicle.routeShortName} <br>
+          let vechicle;
+          try {
+            vechicle = feature.values_.features[0].values_.data;
+            selectedFeature = vechicle;
+            content.innerHTML = `<p>Linia: ${vechicle.routeShortName} <br>
               Kierunek: ${vechicle.headsign} <br>
               Opóźnienie: ${
                 vechicle.delay <= 0 ? "brak" : vechicle.delay + "s"
               } <br>
               Prędkość: ${vechicle.speed} km/h</p>`;
-          overlay.setPosition(coordinate);
+            overlay.setPosition(coordinate);
+          } catch (error) {
+            return;
+          }
         } else {
           overlay.setPosition(0, 0);
+          selectedFeature = null;
         }
       });
 
@@ -227,6 +236,12 @@
           });
           marker.set("data", vehicle);
           vectorSource.addFeature(marker);
+          if (
+            selectedFeature != null &&
+            vehicle.vehicleId == selectedFeature.vehicleId
+          ) {
+            overlay.setPosition(coordinates);
+          }
         });
         map.addLayer(clusterLayer);
       }
